@@ -27,7 +27,6 @@ class UserController extends Controller
     }
 
     function insertUser(){      
-        echo "-----------------";  
         /*$response = response("", 201);
         $validator = $this->validator->validate(); 
         if($validator->fails()){                 

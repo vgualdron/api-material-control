@@ -17,6 +17,10 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
+$router->group(["prefix" => "/token"], function () use($router){    
+    $router->get('/get-active-token', ['as' => 'token.getActiveToken', 'uses' => 'tokenController@getActiveToken']);
+});
+
 $router->group(["prefix" => "/v1", "middleware" => ["cors", "auth"]], function () use($router){
     $router->group(["prefix" => "/user"], function () use($router){
         $router->post('/register', ['as' => 'user.insert', 'uses' => 'userController@insertUser']);
@@ -33,5 +37,6 @@ $router->group(["prefix" => "/v1", "middleware" => ["cors", "auth"]], function (
     $router->group(["prefix" => "/permission"], function () use($router){
         $router->post('/listBySession', 'permissionController@listBySession');
         $router->get('/listBySessionGroup', 'permissionController@listBySessionGroup');
-    });
+    });   
+    
 });
