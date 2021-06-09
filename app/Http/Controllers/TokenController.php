@@ -13,6 +13,6 @@ class TokenController extends Controller
     }
 
     function getActiveToken(){                   
-        return response($this->service->getActiveToken());
+        return response($this->service->getActiveToken()[0]);
     }
 }

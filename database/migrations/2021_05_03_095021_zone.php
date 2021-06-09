@@ -15,7 +15,8 @@ class Zone extends Migration
     {
         Schema::create('zone', function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
-            $table->string('name', 255)->collation('utf8_spanish_ci');
+            $table->string('code', 10)->collation('utf8_spanish_ci');
+            $table->string('name', 30)->collation('utf8_spanish_ci');
             $table->timestamps();
         });
     }

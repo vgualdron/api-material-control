@@ -28,4 +28,13 @@ class Yard extends Model
      */
     protected $hidden = [
     ];
+
+    function toArray(){
+        return [
+            'id' => $this->id,
+            'code' => $this->code,
+            'name' => $this->name,            
+            'zone' => $this->zone
+        ];
+    }
 }

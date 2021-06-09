@@ -11,45 +11,42 @@
            
         }    
 
-        /*function listBySession($user){            
+        function listBySession($user){            
             $permissions = $user->getAllPermissions(); 
-            $array = array();  
-            $permArray = array();                       
+            $array = array();
+                              
             for($i = 0; $i<count($permissions); $i++){                
                 if($permissions[$i]["is_function"]){
-                    $arrayPerm = explode(".", $permissions[$i]["name"]);  
-                    if(!array_key_exists($arrayPerm[0],$array)){
-                        $array[$arrayPerm[0]] = $permArray;
-                    }
-                    array_push($array[$arrayPerm[0]],$arrayPerm[1]);
+                    array_push($array, $permissions[$i]["name"]);                    
+                }                
+            }             
+            sort($array);            
+            $permArray = array();
+            $genArray = array();
+            $objectArr = array();
+            for($i=0; $i<count($array); $i++){
+                $perm = explode(".", $array[$i])[0];   
+                array_push($permArray, explode(".", $array[$i])[1]); 
+                
+                if($i == count($array)-1 ||  explode(".", $array[$i+1])[0]!=$perm){                   
+                    $objectArr['name'] = $perm;
+                    $objectArr['permissions'] = $permArray;
+                    array_push($genArray, $objectArr);
+                    $objectArr = array();
+                    $permArray = array();
                 }
-            } 
-            
-            return $array;;             
-        }*/
-
-        function listBySession($user){
-            $permObject = new SessionPermissionModel();
-            $permissions = $user->getAllPermissions(); 
-            $array = array();  
-            $permArray = array();                       
-            for($i = 0; $i<count($permissions); $i++){                
-                array_push($permObject->$arrayPerm[0],$arrayPerm[1]);
-            } 
-            
-            return $permObject;             
+            }            
+            return $genArray;
+                       
         }
 
         function listBySessionGroup($user){            
             $permissions = $user->getAllPermissions(); 
-            $array = array();  
-            $array['permissions'] = array();
-            $permArray = array();  
+            $array = array();
             for($i = 0; $i<count($permissions); $i++){
-                array_push($array['permissions'],$permissions[$i]["name"]);                   
-            }  
-            array_push($permArray, $array);    
-            return $permArray; 
+                array_push($array, $permissions[$i]["name"]);                   
+            }                  
+            return $array; 
         }
     }
 ?>

@@ -20,8 +20,8 @@ class Tiquet extends Migration
             $table->unsignedBigInteger('destiny_user')->nullable();
             $table->unsignedBigInteger('origin_yard')->nullable();
             $table->unsignedBigInteger('destiny_yard')->nullable();            
-            $table->unsignedBigInteger('supplier')->nullable();
-            $table->unsignedBigInteger('client')->nullable();
+            $table->string('supplier', 255)->nullable();
+            $table->string('client', 255)->nullable();
             $table->unsignedBigInteger('material')->nullable();
             $table->string('receipt_number', 50)->collation('utf8_spanish_ci')->nullable();
             $table->string('reference_number', 50)->collation('utf8_spanish_ci')->nullable();
@@ -36,7 +36,7 @@ class Tiquet extends Migration
             $table->decimal('destiny_gross_weight')->nullable();
             $table->decimal('destiny_tare_weight')->nullable();
             $table->decimal('destiny_net_weight')->nullable();  
-            $table->unsignedBigInteger('transportation_company')->nullable();  
+            $table->string('transportation_company', 255)->nullable();  
             $table->string('origin_observation', 200)->collation('utf8_spanish_ci')->nullable();
             $table->string('destiny_observation', 200)->collation('utf8_spanish_ci')->nullable();
             $table->string('origin_seal', 50)->collation('utf8_spanish_ci')->nullable();
@@ -44,11 +44,8 @@ class Tiquet extends Migration
             $table->boolean('round_trip', 50)->collation('utf8_spanish_ci')->nullable();
             /* foreigns */
             $table->foreign('origin_yard')->references('id')->on('yard');
-            $table->foreign('destiny_yard')->references('id')->on('yard');
-            $table->foreign('supplier')->references('id')->on('third');
-            $table->foreign('client')->references('id')->on('third');
-            $table->foreign('material')->references('id')->on('material');
-            $table->foreign('transportation_company')->references('id')->on('third');
+            $table->foreign('destiny_yard')->references('id')->on('yard');            
+            $table->foreign('material')->references('id')->on('material');            
             $table->foreign('origin_user')->references('id')->on('user');
             $table->foreign('destiny_user')->references('id')->on('user');
             /* unique index */

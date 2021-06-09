@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\Implementations\UserServiceImplement;
 use App\Validator\UserValidator;
-
+use App\Validator\ProfileValidator;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
 
@@ -13,35 +13,43 @@ class UserController extends Controller
     private $userService;
     private $request;
     private $validator;
+    private $profileValidator;
+    private $model;
 
-    public function __construct(UserServiceImplement $userService, Request $request, UserValidator $validator){
+    public function __construct(UserServiceImplement $userService, Request $request, UserValidator $validator, ProfileValidator $profileValidator){        
+        $this->model = new User;
         $this->userService = $userService;
         $this->request = $request;
         $this->validator = $validator;
+        $this->profileValidator = $profileValidator;
         $this->middleware('validate', ['except' => []
         ]);
     }
 
-    function listUser(){
-        return response($this->userService->listUser());
+    function list(){
+        return response($this->userService->list());
     }
 
-    function insertUser(){      
-        /*$response = response("", 201);
-        $validator = $this->validator->validate(); 
-        if($validator->fails()){                 
-            $response = response([
-                "status" => 422,
-                "message" => "error",
-                "error" => $validator->messages()
-            ], 422);
-        }else{
-            $this->userService->insertUser($this->request->all());
+    function get($id){
+        try {      
+            $this->model->findOrFail($id);      
+            return $this->userService->get($id);
+        } catch (\Exception $e) {
+            $message = 'Error al obtener datos de usuario';            
+            $response = $this->controlExceptions(null, $e, $message);            
         }
-        return $response;*/        
-        try {
-            $validator = $this->validator->validate();
-            $userModel = $this->userService->insertUser($this->request->all());
+        return $response;
+    }
+
+    function insert(){          
+        try {            
+            $this->request["password"] = $this->request["document_number"];
+            $this->request["confirm_password"]  = $this->request["document_number"];            
+            $validator = $this->validator->validate();            
+            if($validator->fails()){
+                trigger_error("Error de validación", E_USER_ERROR);
+            }            
+            $userModel = $this->userService->insert($this->request->all());
             $response = response([                
                 "message" => "Usuario creado con éxito",
                 "data" => $userModel             
@@ -53,142 +61,63 @@ class UserController extends Controller
         return $response;
     }
 
-    function updateUser(int $id){       
-        /*$response = response("", 202);
-        $validator = $this->validator->validate(); 
-        if($validator->fails()){    
+    function update(int $id){        
+        try {            
+            $this->model->findOrFail($id);                  
+            $this->request["password"] = trim($this->request["password"]);
+            $this->request["confirm_password"] = trim($this->request["confirm_password"]);            
+            if(!empty($this->request["password"]) || !empty($this->request["confirm_password"])){                
+                $profileValidator = $this->profileValidator->validate();
+                if($profileValidator->fails())          
+                    trigger_error("Error de validación", E_USER_ERROR);
+            }            
+            $validator = $this->validator->validate();
+            if($validator->fails()){                            
+                trigger_error("Error de validación", E_USER_ERROR);
+            }
+            $userModel = $this->userService->update($this->request->all(), $id);
             $response = response([
-                "status" => 422,
-                "message" => "error",
-                "error" => $validator->messages()
-            ], 422);
-        }else{
-            $this->userService->updateUser($this->request->all(), $id);
-        }
-        return $response;*/
-
-
-        try {
-            $validator = $this->validator->validate();            
-            $userModel = $this->userService->updateUser($this->request->all(), $id);
-            $response = response([                
                 "message" => "Usuario actualizado con éxito",
-                "data" => $userModel             
+                "data" => $userModel
             ], 201);
         } catch (\Exception $e) {
-            $message = 'Error al actualizar usuario';
-            $response = $this->controlExceptions($validator, $e, $message);            
+            $message = 'Error al actualizar usuario';           
+            $response = $this->controlExceptions((!empty($validator) ? $validator : (!empty($profileValidator) ? $profileValidator : null)), $e, $message);            
         }
         return $response;
     }
 
-    function deleteUser($id){             
-        /*$response = response("", 204);
-        $this->userService->deleteUser($id);
-        return $response;*/
-
+    function updateProfile(int $id){
         try {
-            $this->userService->deleteUser($id);
+            $this->model->findOrFail($id); 
+            $profileValidator = $this->profileValidator->validate();
+            if($profileValidator->fails()){                     
+                trigger_error("Error de validación", E_USER_ERROR);                
+            }
+            $userModel = $this->userService->updateProfile($this->request->all(), $id);
+            $response = response([                
+                "message" => "Perfil actualizado con éxito",
+                "data" => $userModel             
+            ], 201);
+        } catch (\Exception $e) {            
+            $message = 'Error al actualizar perfil';            
+            $response = $this->controlExceptions((!empty($profileValidator) ? $profileValidator : null), $e, $message);            
+        }
+        return $response;
+    }
+
+    function delete($id){
+        try {     
+            $this->model->findOrFail($id);        
+            $this->userService->delete($id);            
             $response = response([                
                 "message" => "Usuario eliminado con éxito"                           
             ], 201);
         } catch (\Exception $e) {
-            $message = 'Error al eliminar usuario';            
-            $response = $this->controlExceptions($validator, $e, $message);            
+            $message = 'Error al eliminar usuario';
+            $response = $this->controlExceptions(null, $e, $message);            
         }
         return $response;
-    }
-
-    /**
-     * Crear un Usuario
-     * 
-     * Endpoint para crear un usuario
-     * 
-     * @bodyParam first_name string required The first_name of the user. Example: Víctor
-     * @bodyParam last_name  string required The last_name of the user. Example: Gualdrón
-     * @bodyParam phone      int    required The phone of the user. Example: 1234
-     * @bodyParam email      string required The adress of the user. Example: vgualdron@2rides.com.co
-     * @bodyParam id_role    int    required The id ot the role of the user. Example: 25
-     * @bodyParam id_company int    required The id ot the company of the user. Example: 25
-     * 
-     * @response {
-     *   "data": {
-     *      "id": 1,
-     *      "first_name": "Víctor",
-     *      "last_name": "Gualdrón",
-     *      "phone": "300000000",
-     *      "email": "vgualdron@2rides.com.co",
-     *      "id_role": 1,
-     *      "role": {
-     *          ...
-     *      },
-     *      "id_company": 1,
-     *      "company": {
-     *          "city": {
-     *              ...
-     *              "country": {
-     *                  ...
-     *              }
-     *          }
-     *      }
-     *   },
-     *   "message": "Usuario creado con éxito."
-     * }
-     * 
-     * @response 405 {
-     *  "code": "10405",
-     *  "message": "Error en la validación de los datos, verifique que todos los datos esten completos"
-     * }
-     * 
-     * @response 500 {
-     *  "code": "10500",
-     *  "message": "Error interno del servidor"
-     * }
-     * 
-     * @return \Illuminate\Http\Response
-     */
-    public function create(Request $request)
-    {
-        
-        //validate incoming request 
-        $this->validate($request, [
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
-            'phone' => 'required|string',
-            'email' => 'required|email',
-            'id_role' => 'required|int',
-            'id_company' => 'required|int'
-        ]);
-
-        try {
-
-            $plainPassword = $request->input('phone');
-
-            $user = new User;
-            $user->firstname = $request->input('first_name');
-            $user->lastname = $request->input('last_name');
-            $user->phone = $request->input('phone');
-            $user->email = $request->input('email');
-            $user->password = app('hash')->make($plainPassword);
-            $user->id_company = $request->input('id_company');
-            $user->id_role = $request->input('id_role');
-            $user->save();
-
-            $result = array(
-                'data' => $user,
-                'message' => 'Usuario creado con éxito.'
-            );
-
-            return response()->json($result, 201);
-
-        } catch (\Exception $e) {
-            $result = array(
-                'message' => $e->getMessage()
-            );
-            $code = 500;
-        }
-
-        return response()->json($result, $code);
     }
 }
 

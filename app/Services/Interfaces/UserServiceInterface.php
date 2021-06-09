@@ -3,10 +3,11 @@
     
     interface UserServiceInterface
     {
-        function listUser();
-        function getUser(int $user);
-        function insertUser(array $user);
-        function updateUser(array $user, int $id);
-        function deleteUser(int $id);
+        function list();
+        function get(int $user);
+        function insert(array $user);
+        function update(array $user, int $id);
+        function delete(int $id);
+        function updateProfile(array $user, int $id);
     }
 ?>

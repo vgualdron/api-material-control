@@ -7,7 +7,7 @@
 
         private $request;
 
-        public function __construct(Request $request){
+        public function __construct(Request $request){       
             $this->request = $request;
         }
 
@@ -16,19 +16,18 @@
         }
 
         private function rules(){
-            return[
-                "name" => "required",
-                "document_number" => "required|unique:user,document_number,".$this->request->id,                
-                "password" => "required",
-                "confirm_password" => "required|same:password",
-                "phone" => "required"
+            return[                             
+                'document_number' => 'required|min:5|unique:user,document_number,'.$this->request->id,
+                'name' => 'required'
             ];
         }
 
         private function messages(){
-            return [  
-                "confirm_password.same" => "La contraseña no coincide con la confirmación",
-                "document_number.unique" => "El número de documento ya existe"
+            return [
+                'document_number.unique' => 'El número de documento "'.$this->request->document_number.'" ya se encuentra registrado',
+                'name.required' => 'El nombre es requerido',
+                'document_number.required' => 'El número de documento es requerido',
+                'document_number.min' => 'El número de documento debe tener como mínimo 5 caracteres'
             ];
         }
     }

@@ -14,6 +14,7 @@ class Zone extends Model
      */
     protected $fillable = [
         'id',
+        'code',
         'name'
     ];
 
@@ -28,6 +29,7 @@ class Zone extends Model
     function toArray(){
         return [
             'id' => $this->id,
+            'code' => $this->code,
             'name' => $this->name
         ];
     }
