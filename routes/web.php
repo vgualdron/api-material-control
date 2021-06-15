@@ -29,7 +29,7 @@ $router->group(["prefix" => "/v1", "middleware" => ["cors", "auth"]], function (
         $router->get('/{id}', ['as' => 'user.get', 'uses' => 'userController@get']);
         $router->put("/{id}", ['as' => 'user.update', 'uses' => 'userController@update']);
         $router->delete("/{id}", ['as' => 'user.delete', 'uses' => 'userController@delete']);
-        $router->patch("/updateProfile/{id}", ['as' => 'user.updateProfile', 'uses' => 'userController@updateProfile']);
+        $router->patch("/changePassword/{id}", ['as' => 'user.changePassword', 'uses' => 'userController@changePassword']);
     });
 
     $router->group(["prefix" => "/thirdFB"], function () use($router){
@@ -55,5 +55,18 @@ $router->group(["prefix" => "/v1", "middleware" => ["cors", "auth"]], function (
         $router->get('/{id}', ['as' => 'yard.get', 'uses' => 'yardController@get']);
         $router->put("/{id}", ['as' => 'yard.update', 'uses' => 'yardController@update']);
        $router->delete("/{id}", ['as' => 'yard.delete', 'uses' => 'yardController@delete']);
-    });    
+    });
+
+    $router->group(["prefix" => "/material"], function () use($router){        
+        $router->post('/', ['as' => 'material.insert', 'uses' => 'materialController@insert']);
+        $router->get('/', ['as' => 'material.list', 'uses' => 'materialController@list']);
+        $router->get('/{id}', ['as' => 'material.get', 'uses' => 'materialController@get']);
+        $router->put("/{id}", ['as' => 'material.update', 'uses' => 'materialController@update']);
+        $router->delete("/{id}", ['as' => 'material.delete', 'uses' => 'materialController@delete']);
+    });
+
+    $router->group(["prefix" => "/synchronize"], function () use($router){        
+        $router->get('/fromServer', ['as' => 'synchronize.fromServer', 'uses' => 'synchronizeController@fromServer']);
+        $router->get('/toServer', ['as' => 'synchronize.toServer', 'uses' => 'materialController@toServer']);
+    });
 });

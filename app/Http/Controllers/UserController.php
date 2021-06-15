@@ -32,7 +32,7 @@ class UserController extends Controller
 
     function get($id){
         try {      
-            $this->model->findOrFail($id);      
+            $this->model->findOrFail($id);
             return $this->userService->get($id);
         } catch (\Exception $e) {
             $message = 'Error al obtener datos de usuario';            
@@ -87,20 +87,20 @@ class UserController extends Controller
         return $response;
     }
 
-    function updateProfile(int $id){
+    function changePassword(int $id){
         try {
             $this->model->findOrFail($id); 
             $profileValidator = $this->profileValidator->validate();
             if($profileValidator->fails()){                     
                 trigger_error("Error de validación", E_USER_ERROR);                
             }
-            $userModel = $this->userService->updateProfile($this->request->all(), $id);
+            $userModel = $this->userService->changePassword($this->request->all(), $id);
             $response = response([                
-                "message" => "Perfil actualizado con éxito",
+                "message" => "Contraseña actualizada con éxito",
                 "data" => $userModel             
             ], 201);
         } catch (\Exception $e) {            
-            $message = 'Error al actualizar perfil';            
+            $message = 'Error al actualizar contraseña';            
             $response = $this->controlExceptions((!empty($profileValidator) ? $profileValidator : null), $e, $message);            
         }
         return $response;

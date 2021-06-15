@@ -56,14 +56,14 @@
                 $arrayData['password'] = $user['password'] = Hash::make($user['password']);
             }
             $this->model->where('id', $id)->first()
-            ->fill($arrayData)->save();  
+            ->fill($arrayData)->save();
             $model = $this->model->where('id', $id)->first();
             $model->roles()->detach();
             $model->assignRole($user['role']);
             return $model;
         }
 
-        function updateProfile(array $user, int $id){  
+        function changePassword(array $user, int $id){  
             $user['password'] = Hash::make($user['password']);
             $this->model->findOrFail($id);            
             $this->model->where('id', $id)->first()

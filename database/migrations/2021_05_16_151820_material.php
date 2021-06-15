@@ -15,9 +15,9 @@ class Material extends Migration
     {
         Schema::create('material', function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
-            $table->string('code', 30)->collation('utf8_spanish_ci');
-            $table->string('name', 200)->collation('utf8_spanish_ci');
-            $table->string('unit', 50)->collation('utf8_spanish_ci');    
+            $table->string('code', 10)->collation('utf8_spanish_ci');
+            $table->string('name', 150)->collation('utf8_spanish_ci');
+            $table->string('unit', 2)->collation('utf8_spanish_ci');    
             $table->timestamps();   
         });
     }

@@ -38,7 +38,8 @@ class Tiquet extends Model
         'destiny_observation',
         'origin_seal',
         'destiny_seal',
-        'round_trip',        
+        'round_trip',
+        'loan',
         'created_at',
         'updated_at'
     ];
@@ -79,6 +80,7 @@ class Tiquet extends Model
             'destinyObservation' => $this->destiny_observation,
             'originSeal' => $this->origin_seal,
             'destinySeal' => $this->destiny_seal,
+            'loan' => $this->loan,
             'roundTrip' => $this->round_trip
         ];
     }
