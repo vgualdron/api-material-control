@@ -8,7 +8,8 @@
         "php": "^7.3|^8.0",
         "dusterio/lumen-passport": "^0.3.4",
         "flipbox/lumen-generator": "^8.2",
-        "harrygulliford/laravel-firebird": "^2.3",
+        "guzzlehttp/guzzle": "^7.3",
+        "harrygulliford/laravel-firebird": "^2.4",
         "laravel/lumen-framework": "^8.0",
         "spatie/laravel-permission": "^4.0"
     },

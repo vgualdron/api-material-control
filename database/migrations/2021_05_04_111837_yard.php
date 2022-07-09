@@ -18,6 +18,8 @@ class Yard extends Migration
             $table->string('code', 30)->collation('utf8_spanish_ci');
             $table->string('name', 100)->collation('utf8_spanish_ci');
             $table->unsignedBigInteger('zone')->nullable();
+            $table->decimal('longitude', 6,6)->nullable();
+            $table->decimal('latitude', 6,6)->nullable();
             $table->foreign('zone')->references('id')->on('zone');
             $table->timestamps();
         });

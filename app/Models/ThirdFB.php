@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ThirdFB extends Model
 {
-    public $table = "TERCERO";
+    public $table = "TERCEROS";
     protected $connection = 'firebird';
     /**
      * The attributes that are mass assignable.
@@ -14,9 +14,12 @@ class ThirdFB extends Model
      * @var array
      */
     protected $fillable = [
-        'ID',
+        'TERID',
         'NIT',
-        'NOMBRE',        
+        'NOMBRE',
+        'CLIENTE',
+        'ASOCIADO',
+        'CONTRATISTA',
     ];
 
     /**
@@ -29,9 +32,12 @@ class ThirdFB extends Model
 
     function toArray(){
         return [
-            'id' => $this->ID,
-            'nit' => $this->NIT,            
-            'name' => $this->NOMBRE
+            'id' => $this->TERID,
+            'nit' => $this->NIT,
+            'name' => $this->NOMBRE,
+            'customer' => $this->CLIENTE,
+            'associated' => $this->ASOCIADO,
+            'contractor' => $this->CONTRATISTA
         ];
     }
 }

@@ -5,5 +5,6 @@
     {
         function listBySession($user);
         function listBySessionGroup($user);
+        function listByGroup();
     }
 ?>

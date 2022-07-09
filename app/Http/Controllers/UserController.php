@@ -5,8 +5,14 @@ use Illuminate\Http\Request;
 use App\Services\Implementations\UserServiceImplement;
 use App\Validator\UserValidator;
 use App\Validator\ProfileValidator;
-use Spatie\Permission\Models\Role;
 use App\Models\User;
+
+/**
+ * 
+ * crear endpoint para obtener usuario en sesion
+ * 
+*/
+
 
 class UserController extends Controller
 {
@@ -26,8 +32,9 @@ class UserController extends Controller
         ]);
     }
 
-    function list(){
-        return response($this->userService->list());
+    function list($perPage, $page, $text){
+        $text = trim(urldecode($text));
+        return response($this->userService->list($perPage, $page, $text));
     }
 
     function get($id){
@@ -36,7 +43,7 @@ class UserController extends Controller
             return $this->userService->get($id);
         } catch (\Exception $e) {
             $message = 'Error al obtener datos de usuario';            
-            $response = $this->controlExceptions(null, $e, $message);            
+            $response = $this->controlExceptions(null, $e, '', $message);            
         }
         return $response;
     }
@@ -56,7 +63,7 @@ class UserController extends Controller
             ], 201);
         } catch (\Exception $e) {
             $message = 'Error al registrar usuario';
-            $response = $this->controlExceptions($validator, $e, $message);            
+            $response = $this->controlExceptions($validator, $e, '', $message);            
         }
         return $response;
     }
@@ -82,14 +89,15 @@ class UserController extends Controller
             ], 201);
         } catch (\Exception $e) {
             $message = 'Error al actualizar usuario';           
-            $response = $this->controlExceptions((!empty($validator) ? $validator : (!empty($profileValidator) ? $profileValidator : null)), $e, $message);            
+            $response = $this->controlExceptions((!empty($validator) ? $validator : (!empty($profileValidator) ? $profileValidator : null)), $e, '', $message);            
         }
         return $response;
     }
 
     function changePassword(int $id){
         try {
-            $this->model->findOrFail($id); 
+            $this->model->findOrFail($id);
+            //$this->request['password']='1233';
             $profileValidator = $this->profileValidator->validate();
             if($profileValidator->fails()){                     
                 trigger_error("Error de validación", E_USER_ERROR);                
@@ -101,7 +109,7 @@ class UserController extends Controller
             ], 201);
         } catch (\Exception $e) {            
             $message = 'Error al actualizar contraseña';            
-            $response = $this->controlExceptions((!empty($profileValidator) ? $profileValidator : null), $e, $message);            
+            $response = $this->controlExceptions((!empty($profileValidator) ? $profileValidator : null), $e, '', $message);            
         }
         return $response;
     }
@@ -115,7 +123,7 @@ class UserController extends Controller
             ], 201);
         } catch (\Exception $e) {
             $message = 'Error al eliminar usuario';
-            $response = $this->controlExceptions(null, $e, $message);            
+            $response = $this->controlExceptions(null, $e, 'El usuario', $message);            
         }
         return $response;
     }

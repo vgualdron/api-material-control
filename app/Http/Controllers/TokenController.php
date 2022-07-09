@@ -12,7 +12,7 @@ class TokenController extends Controller
         $this->service = $service;
     }
 
-    function getActiveToken(){                   
+    function getActiveToken(){
         return response($this->service->getActiveToken()[0]);
     }
 }

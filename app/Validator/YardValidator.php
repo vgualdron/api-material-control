@@ -18,7 +18,7 @@
         private function rules(){
             return[
                 "name" => "required|min:5|unique:yard,name,".$this->request->id,
-                "code" => "required|min:5|unique:yard,code,".$this->request->id,
+                "code" => "required|min:2|unique:yard,code,".$this->request->id,
                 "zone" => "required|exists:zone,id"
             ];
         }
@@ -30,7 +30,7 @@
                 "name.min" => "El nombre de patio debe tener un minimo de 5 caracteres",
                 "code.required" => "El código del patio es requerido",
                 "code.unique" => "El código de patio '".$this->request->code."', ya existe",               
-                "code.min" => "El codigo de patio debe tener un minimo de 5 caracteres",
+                "code.min" => "El código de patio debe tener un minimo de 5 caracteres",
                 "zone.required" => "Debe ingresar una zona",
                 "zone.exists" => "La zona seleccionada no existe"
             ];

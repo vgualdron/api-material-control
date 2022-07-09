@@ -16,7 +16,10 @@ class Permission extends Model
         'id',
         'name',
         'guard_name',
-        'is_function'
+        'is_function',
+        'display_name',
+        'offline',
+        'general'
     ];
 
     /**
@@ -33,6 +36,9 @@ class Permission extends Model
             'name' => $this->name,
             'guardName' => $this->guard_name,
             'isFunction' => $this->is_function,
+            'displayName' => $this->display_name,
+            'offline' => $this->offline,
+            'general' => $this->general
         ];
     }
 }

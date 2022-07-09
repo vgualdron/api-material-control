@@ -12,7 +12,7 @@
             $this->model = new Token;
         }    
 
-        function getActiveToken(){            
+        function getActiveToken(){
             return $this->model->where('password_client', 1)->where('revoked', 0)->get();
         }
     }

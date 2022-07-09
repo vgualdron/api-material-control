@@ -14,8 +14,8 @@ class ZoneSeeder extends Seeder
      */
     public function run()
     {
-        Zone::create(["name" => "CUNDINAMARCA" ]);
         Zone::create(["name" => "BOYACÁ" ]);
+        Zone::create(["name" => "CUNDINAMARCA" ]);        
         Zone::create(["name" => "NORTE DE SANTANDER" ]);               
     }
 }

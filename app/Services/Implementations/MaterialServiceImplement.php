@@ -11,8 +11,25 @@
             $this->model = new Material;
         }    
 
-        function list(){
-            return $this->model->get();
+        function list(int $perPage, int $page, string $text, int $material){
+            
+            $materialQuery = $this->model->select('id', 'code', 'name')
+                            ->where('id', $material)
+                            ->get();
+            
+            $mainQuery = $this->model->where(function ($query) use ($text){
+                                $query->where('name', 'like', '%'.$text.'%')
+                                    ->orWhere('code', 'like', '%'.$text.'%');
+                                                    }
+                            )
+                        ->where('id', '<>', (!empty($materialQuery[0]->id) ? $materialQuery[0]->id : 0))
+                        ->orderBy('code')
+                        ->paginate($perPage, ['id', 'name', 'code', 'unit'], 'page', $page);
+            
+            if(!empty($materialQuery[0]))
+                $mainQuery->prepend($materialQuery[0]);
+                
+            return $mainQuery;
         }
 
         function get(int $id){

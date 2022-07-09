@@ -15,7 +15,8 @@ class Role extends Model
     protected $fillable = [
         'id',
         'name',
-        'guard_name'
+        'guard_name',
+        'permissions'
     ];
 
     /**
@@ -30,7 +31,8 @@ class Role extends Model
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'guardName' => $this->guard_name
+            'guardName' => $this->guard_name,
+            'permissions' => $this->permissions
         ];
     }
 }

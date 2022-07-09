@@ -17,7 +17,7 @@
 
         private function rules(){
             return[
-                "code" => "required|min:3|max:10|unique:zone,code,".$this->request->id,
+                "code" => "required|min:2|max:10|unique:zone,code,".$this->request->id,
                 "name" => "required|min:5|max:30|unique:zone,name,".$this->request->id
             ];
         }

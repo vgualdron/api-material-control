@@ -23,8 +23,9 @@ class ZoneController extends Controller
         ]);
     }
 
-    function list(){  
-        return response($this->zoneService->list());
+    function list($perPage, $page, $text, $zone){
+        $text = trim(urldecode($text));
+        return response($this->zoneService->list($perPage, $page, $text, $zone));
     }
 
     function get($id){
@@ -33,7 +34,7 @@ class ZoneController extends Controller
             return $this->zoneService->get($id);
         } catch (\Exception $e) {
             $message = 'Error al obtener datos de zona';            
-            $response = $this->controlExceptions(null, $e, $message);            
+            $response = $this->controlExceptions(null, $e, '', $message);            
         }
         return $response;
     }
@@ -51,7 +52,7 @@ class ZoneController extends Controller
             ], 201);
         } catch (\Exception $e) {
             $message = 'Error al registrar zona';
-            $response = $this->controlExceptions($validator, $e, $message);            
+            $response = $this->controlExceptions($validator, $e, '', $message);            
         }
         return $response;
     }
@@ -70,7 +71,7 @@ class ZoneController extends Controller
             ], 201);
         } catch (\Exception $e) {
             $message = 'Error al actualizar zona';
-            $response = $this->controlExceptions((!empty($validator) ? $validator : null), $e, $message);
+            $response = $this->controlExceptions((!empty($validator) ? $validator : null), $e, '', $message);
             
         }
         return $response;
@@ -85,7 +86,7 @@ class ZoneController extends Controller
             ], 201);
         } catch (\Exception $e) {
             $message = 'Error al eliminar zona';
-            $response = $this->controlExceptions(null, $e, $message);            
+            $response = $this->controlExceptions(null, $e, 'La zona', $message);            
         }
         return $response;
     }

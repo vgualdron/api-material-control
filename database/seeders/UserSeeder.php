@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             "name" => "Admin",
             "document_number" => "Admin",
             "phone" => "0000000",
-            "password" => Hash::make('Admin')]
+            "password" => Hash::make('admin')]
         )->assignRole('Admin');
 
         /*User::create([

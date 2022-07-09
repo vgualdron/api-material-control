@@ -1,14 +1,16 @@
 <?php
     namespace App\Services\Implementations;
     use App\Services\Interfaces\PermissionServiceInterface;
-    use App\Models\User; 
-    use App\Models\SessionPermissionModel;
+    use App\Models\User;
+    use App\Models\Permission;
     use Illuminate\Contracts\Auth\Factory as Auth;
     
     class PermissionServiceImplement implements PermissionServiceInterface{
                 
+        private $model;
+        
         function __construct(){
-           
+           $this->model = new Permission;
         }    
 
         function listBySession($user){            
@@ -47,6 +49,10 @@
                 array_push($array, $permissions[$i]["name"]);                   
             }                  
             return $array; 
+        }
+        
+        function listByGroup(){            
+            return $this->model->where('general', 0)->get();
         }
     }
 ?>

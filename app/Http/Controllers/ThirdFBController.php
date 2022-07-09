@@ -8,11 +8,11 @@ class ThirdFBController extends Controller
 {
     private $service;    
 
-    public function __construct(ThirdFBServiceImplement $service){
+    public function __construct(ThirdFBServiceImplement $service){       
         $this->service = $service;
     }
 
-    function list(){     
+    function list(){
         return response($this->service->list());
     }
 }

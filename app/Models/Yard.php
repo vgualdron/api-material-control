@@ -17,6 +17,9 @@ class Yard extends Model
         'code',
         'name',
         'zone',
+        'zoneName',
+        'latitude',
+        'longitude',
         'created_at',
         'updated_at'        
     ];
@@ -34,7 +37,10 @@ class Yard extends Model
             'id' => $this->id,
             'code' => $this->code,
             'name' => $this->name,            
-            'zone' => $this->zone
+            'zone' => $this->zone,
+            'zoneName' => $this->zoneName,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude
         ];
     }
 }

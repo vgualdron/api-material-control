@@ -23,8 +23,9 @@ class MaterialController extends Controller
         ]);
     }
 
-    function list(){  
-        return response($this->materialService->list());
+    function list($perPage, $page, $text, $material){
+        $text = trim(urldecode($text));
+        return response($this->materialService->list($perPage, $page, $text, $material));
     }
 
     function get($id){
@@ -32,8 +33,8 @@ class MaterialController extends Controller
             $this->model->findOrFail($id);
             return $this->materialService->get($id);
         } catch (\Exception $e) {
-            $message = 'Error al obtener datos de material';            
-            $response = $this->controlExceptions(null, $e, $message);            
+            $message = 'Error al obtener datos de material';
+            $response = $this->controlExceptions(null, $e, '', $message);            
         }
         return $response;
     }
@@ -51,7 +52,7 @@ class MaterialController extends Controller
             ], 201);
         } catch (\Exception $e) {
             $message = 'Error al registrar material';
-            $response = $this->controlExceptions($validator, $e, $message);            
+            $response = $this->controlExceptions($validator, $e, '', $message);            
         }
         return $response;
     }
@@ -70,7 +71,7 @@ class MaterialController extends Controller
             ], 201);
         } catch (\Exception $e) {
             $message = 'Error al actualizar material';
-            $response = $this->controlExceptions((!empty($validator) ? $validator : null), $e, $message);
+            $response = $this->controlExceptions((!empty($validator) ? $validator : null), $e, '', $message);
             
         }
         return $response;
@@ -85,7 +86,7 @@ class MaterialController extends Controller
             ], 201);
         } catch (\Exception $e) {
             $message = 'Error al eliminar material';
-            $response = $this->controlExceptions(null, $e, $message);            
+            $response = $this->controlExceptions(null, $e, 'El material', $message);
         }
         return $response;
     }

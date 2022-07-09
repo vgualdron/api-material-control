@@ -4,5 +4,6 @@
     interface SynchronizeServiceInterface
     {
         function fromServer();
+        function toServer(array $objects);
     }
 ?>

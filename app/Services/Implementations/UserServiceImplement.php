@@ -2,35 +2,34 @@
     namespace App\Services\Implementations;
     use App\Services\Interfaces\UserServiceInterface;
     use App\Models\User;
-    use Spatie\Permission\Models\Role;
+    use App\Models\Role;
     use Illuminate\Support\Facades\Hash;
     
     class UserServiceImplement implements UserServiceInterface{
         
         private $model;
-        private $role;
 
         function __construct(){
             $this->model = new User;
-            $this->role = new Role;
         }    
 
-        function list(){
-            return $this->model->get();          
+        function list(int $perPage, int $page, string $text){ 
+            
+            $mainQuery = $this->model->where(function ($query) use ($text){
+                $query->where('name', 'like', '%'.$text.'%')
+                    ->orWhere('document_number', 'like', '%'.$text.'%')
+                    ->orWhere('phone', 'like', '%'.$text.'%');
+                    })
+            ->orderBy('document_number')
+            ->paginate($perPage, ['*'], 'page', $page);
+       
+            return $mainQuery;
         }
 
         function get(int $id){
-            $user = $this->model->where('id', $id)->first();  
-            $roles = $this->role->get();
-            $userRole = $user->getRoleNames();           
-            $arrayRole;
-            for($i=0; $i<count($roles); $i++){
-                $arrayRole[$i]['id'] = $roles[$i]['id'];
-                $arrayRole[$i]['name'] = $roles[$i]['name'];
-                $arrayRole[$i]['value'] = $roles[$i]['name'];                
-                $arrayRole[$i]['active'] = $userRole->search($roles[$i]['name']) === false  ? 0 : 1;
-            }            
-            $user['role'] = $arrayRole;
+            $user = $this->model->where('id', $id)->first();
+            $userRole = $user->getRoleNames(); 
+            $user['role'] = $userRole;
             return  $user;
         }
 
@@ -40,6 +39,7 @@
                         'name' =>  $user['name'],
                         'document_number' =>  $user['document_number'],
                         'phone' =>  $user['phone'],
+                        'yard' =>  !empty(trim($user['yard'])) ? $user['yard'] : null,
                         'password' =>  $user['password']
                     ]);
             $model->assignRole($user['role']);
@@ -50,7 +50,8 @@
             $arrayData = [
                 'name' =>  $user['name'],
                 'document_number' =>  $user['document_number'],
-                'phone' =>  $user['phone']
+                'phone' =>  $user['phone'],
+                'yard' =>  $user['yard']
             ];
             if(!empty($user['password'])){
                 $arrayData['password'] = $user['password'] = Hash::make($user['password']);

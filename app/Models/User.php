@@ -37,7 +37,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $hidden = [
-        'password',
+        //'password',
     ];
 
     function toArray(){
@@ -48,6 +48,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             'phoneNumber' => $this->phone,
             'yard' => $this->yard,
             'role' => $this->role,
+            'password' => $this->password
         ];
     }
 

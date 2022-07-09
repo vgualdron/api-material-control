@@ -23,8 +23,9 @@ class YardController extends Controller
         ]);
     }
 
-    function list(){  
-        return response($this->yardService->list());
+    function list($perPage, $page, $text, $yard, $excludedYard){
+        $text = trim(urldecode($text));
+        return response($this->yardService->list($perPage, $page, $text, $yard, $excludedYard));
     }
 
     function get($id){
@@ -33,13 +34,13 @@ class YardController extends Controller
             return $this->yardService->get($id);
         } catch (\Exception $e) {
             $message = 'Error al obtener datos del patio';            
-            $response = $this->controlExceptions(null, $e, $message);            
+            $response = $this->controlExceptions(null, $e, '', $message);            
         }
         return $response;
     }
 
-    function insert(){          
-        try { 
+    function insert(){
+        try {
             $validator = $this->validator->validate();            
             if($validator->fails()){               
                 trigger_error("Error de validación", E_USER_ERROR);             
@@ -49,9 +50,9 @@ class YardController extends Controller
                 "message" => "Patio creado con éxito",
                 "data" => $yardModel             
             ], 201);
-        } catch (\Exception $e) {            
+        } catch (\Exception $e) {
             $message = 'Error al registrar patio';
-            $response = $this->controlExceptions($validator, $e, $message);            
+            $response = $this->controlExceptions($validator, $e, '', $message);            
         }
         return $response;
     }
@@ -70,14 +71,14 @@ class YardController extends Controller
             ], 201);
         } catch (\Exception $e) {
             $message = 'Error al actualizar patio';
-            $response = $this->controlExceptions((!empty($validator) ? $validator : null), $e, $message);
+            $response = $this->controlExceptions((!empty($validator) ? $validator : null), $e, '', $message);
             
         }
         return $response;
     }
 
     function delete($id){
-        try {     
+        try {
             $this->model->findOrFail($id);        
             $this->yardService->delete($id);            
             $response = response([                
@@ -85,7 +86,7 @@ class YardController extends Controller
             ], 201);
         } catch (\Exception $e) {
             $message = 'Error al eliminar patio';
-            $response = $this->controlExceptions(null, $e, $message);            
+            $response = $this->controlExceptions(null, $e, 'El patio', $message);            
         }
         return $response;
     }

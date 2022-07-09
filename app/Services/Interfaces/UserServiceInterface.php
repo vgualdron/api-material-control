@@ -3,7 +3,7 @@
         
     interface UserServiceInterface
     {
-        function list();
+        function list(int $perPage, int $page, string $text);
         function get(int $user);
         function insert(array $user);
         function update(array $user, int $id);

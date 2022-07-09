@@ -16,11 +16,15 @@ class PermissionController extends Controller
         $this->auth = $auth;        
     }   
 
-    function listBySession(){  
+    function listBySession(){
         return response($this->permissionService->listBySession($this->auth->user())); 
     }
 
     function listBySessionGroup(){             
         return response($this->permissionService->listBySessionGroup($this->auth->user()));
+    }
+    
+    function listByGroup(){             
+        return response($this->permissionService->listByGroup());
     }
 }
