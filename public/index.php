@@ -11,7 +11,7 @@
 |
 */
 
-$app = require './bootstrap/app.php';
+$app = require '../bootstrap/app.php';
 
 /*
 |--------------------------------------------------------------------------
